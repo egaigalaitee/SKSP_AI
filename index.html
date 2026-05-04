@@ -4,68 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokalbiu Langas</title>
-    <link rel="stylesheet" href="./chat-ui.css" />
+    <link rel="stylesheet" href="./main.css" />
   </head>
   <body>
-    <main class="page-shell">
-      <div class="blur blur-one"></div>
-      <div class="blur blur-two"></div>
-      <div class="blur blur-three"></div>
-      <div class="blur blur-four"></div>
-      <div class="blur blur-five"></div>
-      <div class="gradient-orb gradient-orb-one"></div>
-      <div class="gradient-orb gradient-orb-two"></div>
+    <main class="page">
+      <div class="bg-orb bg-orb-1"></div>
+      <div class="bg-orb bg-orb-2"></div>
+      <div class="bg-orb bg-orb-3"></div>
+      <div class="bg-orb bg-orb-4"></div>
       <div class="bottom-glow"></div>
 
-      <header class="topbar">
-        <a href="#" class="brand-mark" aria-label="Pagrindinis">
-          <span class="brand-line brand-line-top"></span>
-          <span class="brand-line brand-line-bottom"></span>
-          <span class="brand-line brand-line-left"></span>
-          <span class="brand-line brand-line-right"></span>
-          <span class="brand-line brand-line-center"></span>
+      <header class="header">
+        <a class="logo" href="#" aria-label="Pradinis">
+          <span class="logo-line logo-line-top-left"></span>
+          <span class="logo-line logo-line-top-right"></span>
+          <span class="logo-line logo-line-middle-left"></span>
+          <span class="logo-line logo-line-middle-right"></span>
+          <span class="logo-line logo-line-bottom-left"></span>
+          <span class="logo-line logo-line-bottom-right"></span>
+          <span class="logo-line logo-line-center"></span>
         </a>
       </header>
 
-      <section class="chat-card">
-        <div class="chat-stage" aria-hidden="true"></div>
-
-        <form class="composer" action="#" method="post">
-          <label for="file-upload" class="upload-button" aria-label="Pridėti failus">
-            +
-          </label>
-          <input id="file-upload" class="file-input" type="file" multiple />
-
-          <div class="composer-content">
-            <input
-              class="message-input"
-              type="text"
-              placeholder="Tekstas"
-              aria-label="Žinutės tekstas"
-            />
-            <div id="file-list" class="file-list" aria-live="polite"></div>
-          </div>
-
-          <button class="send-button" type="submit" aria-label="Siųsti">
-            <span></span>
-          </button>
-        </form>
+      <section class="chat-panel" aria-label="Pokalbio langas">
+        <div class="chat-stage"></div>
       </section>
+
+      <form class="composer" action="#" method="post">
+        <label for="upload" class="upload" aria-label="Prideti failus">+</label>
+        <input id="upload" class="upload-input" type="file" multiple />
+
+        <div class="composer-content">
+          <input
+            class="composer-input"
+            type="text"
+            placeholder="Tekstas"
+            aria-label="Zinutes tekstas"
+          />
+          <div id="file-list" class="file-list" aria-live="polite"></div>
+        </div>
+
+        <button class="send" type="submit" aria-label="Siusti">
+          <span class="send-arrow"></span>
+        </button>
+      </form>
     </main>
 
     <script>
-      const fileInput = document.getElementById("file-upload");
+      const uploadInput = document.getElementById("upload");
       const fileList = document.getElementById("file-list");
 
-      fileInput.addEventListener("change", () => {
-        const files = Array.from(fileInput.files || []);
+      uploadInput.addEventListener("change", () => {
         fileList.innerHTML = "";
-
-        files.forEach((file) => {
-          const chip = document.createElement("span");
-          chip.className = "file-chip";
-          chip.textContent = file.name;
-          fileList.appendChild(chip);
+        Array.from(uploadInput.files || []).forEach((file) => {
+          const tag = document.createElement("span");
+          tag.className = "file-tag";
+          tag.textContent = file.name;
+          fileList.appendChild(tag);
         });
       });
     </script>
