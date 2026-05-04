@@ -1,73 +1,434 @@
-<!DOCTYPE html>
-<html lang="lt">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokalbiu Langas</title>
-    <link rel="stylesheet" href="./chat-ui.css" />
-  </head>
-  <body>
-    <main class="page-shell">
-      <div class="blur blur-one"></div>
-      <div class="blur blur-two"></div>
-      <div class="blur blur-three"></div>
-      <div class="blur blur-four"></div>
-      <div class="blur blur-five"></div>
-      <div class="gradient-orb gradient-orb-one"></div>
-      <div class="gradient-orb gradient-orb-two"></div>
-      <div class="bottom-glow"></div>
+:root {
+  --page-bg: #ffffff;
+  --deep-blue: #174d81;
+  --soft-blue: #a9c5f7;
+  --mid-blue: #8cb2ee;
+  --warm-accent: #ffaf33;
+  --card-bg: rgba(255, 255, 255, 0.97);
+  --text-main: #19558f;
+  --shadow-soft: 0 24px 70px rgba(23, 77, 129, 0.08);
+}
 
-      <header class="topbar">
-        <a href="#" class="brand-mark" aria-label="Pagrindinis">
-          <span class="brand-line brand-line-top"></span>
-          <span class="brand-line brand-line-bottom"></span>
-          <span class="brand-line brand-line-left"></span>
-          <span class="brand-line brand-line-right"></span>
-          <span class="brand-line brand-line-center"></span>
-        </a>
-      </header>
+* {
+  box-sizing: border-box;
+}
 
-      <section class="chat-card">
-        <div class="chat-stage" aria-hidden="true"></div>
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page-bg);
+  font-family: Helvetica, Arial, sans-serif;
+}
 
-        <form class="composer" action="#" method="post">
-          <label for="file-upload" class="upload-button" aria-label="Pridėti failus">
-            +
-          </label>
-          <input id="file-upload" class="file-input" type="file" multiple />
+body {
+  color: var(--text-main);
+}
 
-          <div class="composer-content">
-            <input
-              class="message-input"
-              type="text"
-              placeholder="Tekstas"
-              aria-label="Žinutės tekstas"
-            />
-            <div id="file-list" class="file-list" aria-live="polite"></div>
-          </div>
+.page-shell {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 52px 40px 42px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 11% 18%, rgba(37, 92, 145, 0.92), transparent 28%),
+    radial-gradient(circle at 50% 92%, rgba(255, 255, 255, 0.98), transparent 16%),
+    linear-gradient(90deg, #9eb9ea 0%, #7ea7e6 34%, #9cc0f7 66%, #88b1f4 100%);
+  background-size: 150% 150%;
+  animation: skyShift 20s ease-in-out infinite alternate;
+}
 
-          <button class="send-button" type="submit" aria-label="Siųsti">
-            <span></span>
-          </button>
-        </form>
-      </section>
-    </main>
+.page-shell::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.12), transparent 20%),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.18), transparent 20%),
+    radial-gradient(circle at 50% 90%, rgba(255, 255, 255, 0.65), transparent 13%);
+  opacity: 0.95;
+  animation: mistFloat 18s ease-in-out infinite alternate;
+}
 
-    <script>
-      const fileInput = document.getElementById("file-upload");
-      const fileList = document.getElementById("file-list");
+.blur {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(100px);
+}
 
-      fileInput.addEventListener("change", () => {
-        const files = Array.from(fileInput.files || []);
-        fileList.innerHTML = "";
+.blur-one {
+  width: 1241px;
+  height: 1337px;
+  left: -235px;
+  top: 160px;
+  background: #f1f1f1;
+}
 
-        files.forEach((file) => {
-          const chip = document.createElement("span");
-          chip.className = "file-chip";
-          chip.textContent = file.name;
-          fileList.appendChild(chip);
-        });
-      });
-    </script>
-  </body>
-</html>
+.blur-two {
+  width: 1455px;
+  height: 1500px;
+  left: -480px;
+  top: -495px;
+  background: #bad3ff;
+}
+
+.blur-three {
+  width: 1036px;
+  height: 1068px;
+  left: -417px;
+  top: -63px;
+  background: #0f4c80;
+  filter: blur(260px);
+}
+
+.blur-four {
+  width: 1283px;
+  height: 1283px;
+  right: -320px;
+  top: -494px;
+  background: #9bc0f9;
+  filter: blur(240px);
+}
+
+.blur-five {
+  width: 1039px;
+  height: 1068px;
+  left: -430px;
+  top: 392px;
+  background: #bad3ff;
+  filter: blur(220px);
+}
+
+.gradient-orb {
+  position: absolute;
+  z-index: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(110px);
+  opacity: 0.85;
+}
+
+.gradient-orb-one {
+  top: -160px;
+  left: 34%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 74%);
+  animation: orbDriftOne 14s ease-in-out infinite alternate;
+}
+
+.gradient-orb-two {
+  right: 14%;
+  bottom: 2%;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.82) 0%, rgba(161, 196, 249, 0) 72%);
+  animation: orbDriftTwo 17s ease-in-out infinite alternate;
+}
+
+.bottom-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -120px;
+  z-index: 0;
+  width: 520px;
+  height: 520px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0) 72%);
+  filter: blur(30px);
+  animation: glowPulse 12s ease-in-out infinite alternate;
+}
+
+.topbar,
+.chat-card {
+  position: relative;
+  z-index: 1;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  max-width: 1724px;
+  margin: 0 auto 92px;
+}
+
+.brand-mark {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 62px;
+}
+
+.brand-line {
+  position: absolute;
+  background: #ffffff;
+  opacity: 0.95;
+}
+
+.brand-line-top,
+.brand-line-bottom {
+  left: 0;
+  width: 30px;
+  height: 1.6px;
+}
+
+.brand-line-top {
+  top: 15px;
+  transform: rotate(31deg);
+}
+
+.brand-line-bottom {
+  bottom: 15px;
+  transform: rotate(-31deg);
+}
+
+.brand-line-left,
+.brand-line-right {
+  width: 1.6px;
+  height: 34px;
+  top: 14px;
+}
+
+.brand-line-left {
+  left: 13px;
+}
+
+.brand-line-right {
+  right: 13px;
+}
+
+.brand-line-center {
+  top: 0;
+  left: 26px;
+  width: 1.6px;
+  height: 62px;
+}
+
+.brand-mark::before,
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  width: 27px;
+  height: 1.6px;
+  background: #ffffff;
+}
+
+.brand-mark::before {
+  top: 31px;
+  transform: rotate(31deg);
+}
+
+.brand-mark::after {
+  top: 31px;
+  transform: rotate(-31deg);
+}
+
+.chat-card {
+  max-width: 1723px;
+  min-height: 793px;
+  margin: 0 auto;
+  padding: 0;
+  border-radius: 30px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+}
+
+.chat-stage {
+  min-height: 793px;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  min-height: 52px;
+  margin: 34px auto 0;
+  max-width: 1723px;
+  padding: 0 14px 0 20px;
+  border-radius: 100px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(23, 77, 129, 0.06);
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--warm-accent);
+  font-size: 46px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.composer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 0;
+}
+
+.message-input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 15px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 16.2px;
+}
+
+.message-input::placeholder {
+  color: var(--text-main);
+  opacity: 1;
+}
+
+.file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 175, 51, 0.16);
+  color: #bc7713;
+  font-size: 13px;
+  line-height: 14px;
+}
+
+.send-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 39px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--warm-accent);
+  cursor: pointer;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.send-button:hover {
+  background: #f3a01c;
+  transform: translateY(-1px);
+}
+
+.send-button span {
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  transform: rotate(-45deg) translateY(1px);
+}
+
+@keyframes skyShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes mistFloat {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+}
+
+@keyframes orbDriftOne {
+  0% {
+    transform: translate3d(-30px, -12px, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(54px, 20px, 0) scale(1.18);
+  }
+}
+
+@keyframes orbDriftTwo {
+  0% {
+    transform: translate3d(18px, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-42px, -36px, 0) scale(1.14);
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    transform: translateX(-50%) scale(0.92);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .page-shell {
+    padding: 28px 20px 34px;
+  }
+
+  .topbar {
+    margin-bottom: 40px;
+  }
+
+  .chat-card {
+    min-height: 540px;
+  }
+
+  .chat-stage {
+    min-height: 540px;
+  }
+
+  .composer {
+    grid-template-columns: auto 1fr;
+    border-radius: 28px;
+    padding: 6px 10px 6px 16px;
+  }
+
+  .send-button {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 720px) {
+  .composer {
+    gap: 12px;
+    padding-right: 10px;
+  }
+}
