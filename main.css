@@ -98,65 +98,18 @@ body {
 }
 
 .logo {
-  position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 54px;
   height: 62px;
 }
 
-.logo-line {
-  position: absolute;
+.logo-image {
   display: block;
-  background: #ffffff;
-}
-
-.logo-line-top-left,
-.logo-line-top-right,
-.logo-line-middle-left,
-.logo-line-middle-right,
-.logo-line-bottom-left,
-.logo-line-bottom-right {
-  width: 30px;
-  height: 1.6px;
-  left: 12px;
-  transform-origin: center;
-}
-
-.logo-line-top-left {
-  top: 8px;
-  transform: rotate(31deg);
-}
-
-.logo-line-top-right {
-  top: 8px;
-  transform: rotate(-31deg);
-}
-
-.logo-line-middle-left {
-  top: 30px;
-  transform: rotate(31deg);
-}
-
-.logo-line-middle-right {
-  top: 30px;
-  transform: rotate(-31deg);
-}
-
-.logo-line-bottom-left {
-  bottom: 8px;
-  transform: rotate(-31deg);
-}
-
-.logo-line-bottom-right {
-  bottom: 8px;
-  transform: rotate(31deg);
-}
-
-.logo-line-center {
-  top: 0;
-  left: 26px;
-  width: 1.6px;
-  height: 62px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .chat-panel {
