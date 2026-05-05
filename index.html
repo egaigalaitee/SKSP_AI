@@ -28,7 +28,7 @@
 
       <form class="composer" action="#" method="post">
         <label for="upload" class="upload" aria-label="Prideti failus">
-          <img src="./Pridėti.png" alt="Prideti faila" class="upload-icon" />
+          <img src="./Pridėti.svg" alt="Prideti faila" class="upload-icon" />
         </label>
         <input id="upload" class="upload-input" type="file" multiple />
 
@@ -36,7 +36,7 @@
           <textarea
             id="composer-input"
             class="composer-input"
-            placeholder="Tekstas"
+            placeholder=""
             aria-label="Zinutes tekstas"
             rows="1"
           ></textarea>
@@ -44,7 +44,7 @@
         </div>
 
         <button class="send" type="submit" aria-label="Siusti">
-          <img src="./Siųsti.png" alt="Siusti" class="send-icon" />
+          <img src="./Siųsti.svg" alt="Siusti" class="send-icon" />
         </button>
       </form>
     </main>
@@ -72,6 +72,12 @@
       };
 
       composerInput.addEventListener("input", resizeComposer);
+      composerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          composerForm.requestSubmit();
+        }
+      });
       resizeComposer();
 
       composerForm.addEventListener("submit", (event) => {
