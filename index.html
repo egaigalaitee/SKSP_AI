@@ -22,24 +22,7 @@
 
       <section class="chat-panel" aria-label="Pokalbio langas">
         <div class="chat-stage">
-          <div id="messages" class="messages">
-            <article class="message-row message-row-question">
-              <div class="message-bubble message-bubble-question">
-                <p class="message-text">
-                  Sveiki, noriu paklausti apie mano projekto dizainą.
-                </p>
-              </div>
-            </article>
-
-            <article class="message-row message-row-answer">
-              <div class="message-bubble message-bubble-answer">
-                <p class="message-text">
-                  Žinoma, galiu padėti. Šitie laukeliai dabar automatiškai
-                  didėja pagal teksto kiekį, o šrifto dydis nustatytas į 20px.
-                </p>
-              </div>
-            </article>
-          </div>
+          <div id="messages" class="messages"></div>
         </div>
       </section>
 
@@ -109,7 +92,7 @@
         answer.className = "message-row message-row-answer";
         answer.innerHTML = `
           <div class="message-bubble message-bubble-answer">
-            <p class="message-text">AI atsakymo vieta. Cia gali buti tavo sugeneruotas arba ranka irasytas atsakymas.</p>
+            <p class="message-text">DI atsakymas atsiranda cia po tavo zinutes issiuntimo.</p>
           </div>
         `;
         messages.appendChild(answer);
