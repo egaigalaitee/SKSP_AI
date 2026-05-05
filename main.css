@@ -194,12 +194,15 @@ body {
   justify-content: center;
   width: 30px;
   height: 30px;
-  color: var(--accent);
-  font-size: 45px;
-  font-weight: 300;
-  line-height: 1;
   cursor: pointer;
   user-select: none;
+}
+
+.upload-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .upload-input {
@@ -263,17 +266,16 @@ body {
   width: 40px;
   height: 39px;
   border: 0;
-  border-radius: 50%;
-  background: var(--accent);
+  padding: 0;
+  background: transparent;
   cursor: pointer;
 }
 
-.send-arrow {
-  width: 14px;
-  height: 14px;
-  border-top: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  transform: rotate(-45deg) translateY(1px);
+.send-icon {
+  display: block;
+  width: 40px;
+  height: 39px;
+  object-fit: contain;
 }
 
 @media (max-width: 1100px) {
