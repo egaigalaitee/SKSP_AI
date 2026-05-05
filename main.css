@@ -152,7 +152,7 @@ body {
   width: fit-content;
   max-width: min(760px, 100%);
   padding: 18px 24px;
-  border-radius: 10px;
+  border-radius: 30px;
 }
 
 .message-bubble-question {
@@ -172,6 +172,37 @@ body {
   line-height: 1.35;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+}
+
+.message-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.message-file {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 150px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.message-file-name {
+  color: #0f4c80;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.message-file-meta {
+  color: rgba(15, 76, 128, 0.72);
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .composer {
