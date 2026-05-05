@@ -28,7 +28,7 @@
 
       <form class="composer" action="#" method="post">
         <label for="upload" class="upload" aria-label="Prideti failus">
-          <img src="./Prideti.png" alt="Prideti faila" class="upload-icon" />
+          <img src="./Pridėti.png" alt="Prideti faila" class="upload-icon" />
         </label>
         <input id="upload" class="upload-input" type="file" multiple />
 
@@ -44,7 +44,7 @@
         </div>
 
         <button class="send" type="submit" aria-label="Siusti">
-          <img src="./Siusti.png" alt="Siusti" class="send-icon" />
+          <img src="./Siųsti.png" alt="Siusti" class="send-icon" />
         </button>
       </form>
     </main>
@@ -55,16 +55,112 @@
       const composerForm = document.querySelector(".composer");
       const composerInput = document.getElementById("composer-input");
       const messages = document.getElementById("messages");
+      let attachedFiles = [];
 
-      uploadInput.addEventListener("change", () => {
+      const renderSelectedFiles = () => {
         fileList.innerHTML = "";
-        Array.from(uploadInput.files || []).forEach((file) => {
+        attachedFiles.forEach((file) => {
           const tag = document.createElement("span");
           tag.className = "file-tag";
           tag.textContent = file.name;
           fileList.appendChild(tag);
         });
+      };
+
+      uploadInput.addEventListener("change", () => {
+        attachedFiles = Array.from(uploadInput.files || []);
+        renderSelectedFiles();
       });
+
+      const escapeHtml = (value) =>
+        value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+
+      const formatFileSize = (size) => {
+        if (size < 1024) return `${size} B`;
+        if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+        return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+      };
+
+      const buildAttachmentMarkup = (files) => {
+        if (!files.length) return "";
+
+        const items = files
+          .map(
+            (file) => `
+              <span class="message-file">
+                <span class="message-file-name">${escapeHtml(file.name)}</span>
+                <span class="message-file-meta">${formatFileSize(file.size)}</span>
+              </span>
+            `
+          )
+          .join("");
+
+        return `<div class="message-files">${items}</div>`;
+      };
+
+      const readFilePreview = (file) =>
+        new Promise((resolve) => {
+          if (
+            file.type.startsWith("text/") ||
+            /\.(txt|md|json|csv|js|ts|html|css)$/i.test(file.name)
+          ) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const text = String(reader.result || "").trim();
+              const snippet = text.slice(0, 700);
+              resolve({
+                name: file.name,
+                type: file.type || "text",
+                size: file.size,
+                summary: snippet
+                  ? `Radau tekstinį failą. Pirmos eilutės: ${snippet}`
+                  : "Failas tuščias arba nepavyko nuskaityti turinio.",
+              });
+            };
+            reader.onerror = () =>
+              resolve({
+                name: file.name,
+                type: file.type || "unknown",
+                size: file.size,
+                summary: "Nepavyko nuskaityti šio failo turinio.",
+              });
+            reader.readAsText(file);
+            return;
+          }
+
+          if (file.type.startsWith("image/")) {
+            resolve({
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              summary: `Paveikslėlio failas paruoštas analizei. Dydis: ${formatFileSize(file.size)}.`,
+            });
+            return;
+          }
+
+          resolve({
+            name: file.name,
+            type: file.type || "unknown",
+            size: file.size,
+            summary: `Failas pridėtas. Tipas: ${file.type || "nežinomas"}, dydis: ${formatFileSize(file.size)}.`,
+          });
+        });
+
+      const buildAiResponse = async (text, files) => {
+        if (!files.length) {
+          return "Gavau tavo žinutę. Jei prisegsi failą, galėsiu parodyti jo santrauką šiame pokalbyje.";
+        }
+
+        const previews = await Promise.all(files.map(readFilePreview));
+        const fileSummary = previews
+          .map((file, index) => `${index + 1}. ${file.name}: ${file.summary}`)
+          .join("\n\n");
+
+        return `Gavau tavo žinutę: "${text}".\n\nPridėtų failų analizė:\n\n${fileSummary}`;
+      };
 
       const resizeComposer = () => {
         composerInput.style.height = "auto";
@@ -84,30 +180,42 @@
         event.preventDefault();
 
         const text = composerInput.value.trim();
-        if (!text) return;
+        if (!text && !attachedFiles.length) return;
+        const filesForMessage = [...attachedFiles];
 
         const question = document.createElement("article");
         question.className = "message-row message-row-question";
         question.innerHTML = `
           <div class="message-bubble message-bubble-question">
-            <p class="message-text"></p>
+            ${text ? '<p class="message-text"></p>' : ""}
+            ${buildAttachmentMarkup(filesForMessage)}
           </div>
         `;
-        question.querySelector(".message-text").textContent = text;
+        if (text) {
+          question.querySelector(".message-text").textContent = text;
+        }
         messages.appendChild(question);
 
         const answer = document.createElement("article");
         answer.className = "message-row message-row-answer";
-        answer.innerHTML = `
-          <div class="message-bubble message-bubble-answer">
-            <p class="message-text">DI atsakymas atsiranda cia po tavo zinutes issiuntimo.</p>
-          </div>
-        `;
         messages.appendChild(answer);
 
         composerInput.value = "";
+        attachedFiles = [];
+        uploadInput.value = "";
+        renderSelectedFiles();
         resizeComposer();
         messages.scrollTop = messages.scrollHeight;
+
+        buildAiResponse(text || "Prisegti failai", filesForMessage).then((responseText) => {
+          answer.innerHTML = `
+            <div class="message-bubble message-bubble-answer">
+              <p class="message-text"></p>
+            </div>
+          `;
+          answer.querySelector(".message-text").textContent = responseText;
+          messages.scrollTop = messages.scrollHeight;
+        });
       });
     </script>
   </body>
