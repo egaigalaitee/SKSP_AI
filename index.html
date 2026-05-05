@@ -30,7 +30,13 @@
         <label for="upload" class="upload" aria-label="Prideti failus">
           <img src="./Pridėti.png" alt="Prideti faila" class="upload-icon" />
         </label>
-        <input id="upload" class="upload-input" type="file" multiple />
+        <input
+          id="upload"
+          class="upload-input"
+          type="file"
+          multiple
+          accept=".pdf,.doc,.docx,.dwg,.dxf,.png,.jpg,.jpeg,.tif,.tiff,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg,image/tiff,image/tif"
+        />
 
         <div class="composer-content">
           <textarea
@@ -82,6 +88,19 @@
         if (size < 1024) return `${size} B`;
         if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
         return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+      };
+
+      const getFileKindLabel = (file) => {
+        const extension = file.name.split(".").pop()?.toLowerCase() || "";
+
+        if (extension === "pdf") return "PDF dokumentas";
+        if (extension === "doc" || extension === "docx") return "Word dokumentas";
+        if (extension === "dwg" || extension === "dxf") return "AutoCAD brėžinys";
+        if (extension === "png") return "PNG paveikslėlis";
+        if (extension === "jpg" || extension === "jpeg") return "JPG paveikslėlis";
+        if (extension === "tif" || extension === "tiff") return "TIFF paveikslėlis";
+        if (file.type.startsWith("image/")) return "Paveikslėlis";
+        return "Failas";
       };
 
       const buildAttachmentMarkup = (files) => {
@@ -136,7 +155,7 @@
               name: file.name,
               type: file.type,
               size: file.size,
-              summary: `Paveikslėlio failas paruoštas analizei. Dydis: ${formatFileSize(file.size)}.`,
+              summary: `${getFileKindLabel(file)} paruoštas analizei. Dydis: ${formatFileSize(file.size)}.`,
             });
             return;
           }
@@ -145,7 +164,7 @@
             name: file.name,
             type: file.type || "unknown",
             size: file.size,
-            summary: `Failas pridėtas. Tipas: ${file.type || "nežinomas"}, dydis: ${formatFileSize(file.size)}.`,
+            summary: `${getFileKindLabel(file)} pridėtas. Tipas: ${file.type || "nežinomas"}, dydis: ${formatFileSize(file.size)}.`,
           });
         });
 
