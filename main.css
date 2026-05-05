@@ -170,6 +170,55 @@ body {
 .chat-stage {
   min-height: 793px;
   border-radius: 30px;
+  padding: 34px 42px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-height: 725px;
+  max-height: 725px;
+  overflow-y: auto;
+}
+
+.message-row {
+  display: flex;
+  width: 100%;
+}
+
+.message-row-question {
+  justify-content: flex-end;
+}
+
+.message-row-answer {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  width: fit-content;
+  max-width: min(760px, 100%);
+  padding: 18px 24px;
+  border-radius: 30px;
+}
+
+.message-bubble-question {
+  background: rgba(161, 196, 249, 0.4);
+}
+
+.message-bubble-answer {
+  background: rgba(155, 192, 249, 0.7);
+}
+
+.message-text {
+  margin: 0;
+  color: #0f4c80;
+  font-size: 20px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .composer {
@@ -218,13 +267,17 @@ body {
 
 .composer-input {
   width: 100%;
+  min-height: 28px;
+  max-height: 180px;
   border: 0;
   outline: 0;
+  resize: none;
+  overflow-y: auto;
   background: transparent;
   color: var(--text-blue);
-  font-size: 15px;
+  font-size: 20px;
   font-family: Helvetica, Arial, sans-serif;
-  line-height: 16.2px;
+  line-height: 1.35;
 }
 
 .composer-input::placeholder {
@@ -281,6 +334,12 @@ body {
 
   .chat-stage {
     min-height: 540px;
+    padding: 24px 18px;
+  }
+
+  .messages {
+    min-height: 492px;
+    max-height: 492px;
   }
 
   .composer {
@@ -301,6 +360,12 @@ body {
 
   .chat-stage {
     min-height: 420px;
+    padding: 18px 14px;
+  }
+
+  .messages {
+    min-height: 384px;
+    max-height: 384px;
   }
 
   .composer {
