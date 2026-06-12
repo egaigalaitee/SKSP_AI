@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokalbiu Langas</title>
+    <title>SKSP AI - Dirbtinis Intelektas</title>
     <link rel="stylesheet" href="./main.css" />
   </head>
   <body>
@@ -15,14 +15,42 @@
       <div class="bottom-glow"></div>
 
       <header class="header">
-        <a class="logo" href="#" aria-label="Pradinis">
-          <img src="./Logotipas.png" alt="Logotipas" class="logo-image" />
-        </a>
+        <div class="header-content">
+          <a class="logo" href="#" aria-label="Pradinis">
+            <img src="./Logotipas.png" alt="SKSP Logotipas" class="logo-image" />
+          </a>
+          <div class="header-title">
+            <h1 class="app-title">SKSP AI</h1>
+            <p class="app-subtitle">Dirbtinio intelekto asistentas</p>
+          </div>
+        </div>
       </header>
 
       <section class="chat-panel" aria-label="Pokalbio langas">
         <div class="chat-stage">
+          <div class="chat-welcome" id="chat-welcome">
+            <div class="welcome-content">
+              <div class="welcome-icon">💬</div>
+              <h2 class="welcome-title">Sveiki!</h2>
+              <p class="welcome-text">Aš esu jūsų dirbtinio intelekto asistentas. Galiu padėti su įvairiais darbų uždaviniais ir dokumentų analize.</p>
+              <div class="welcome-tips">
+                <p class="tips-title">Galiu padėti su:</p>
+                <ul class="tips-list">
+                  <li>📄 Dokumentų analize ir santraumomis</li>
+                  <li>🔍 Informacijos ieškojimu ir struktūrizimu</li>
+                  <li>✏️ Tekstų redagavimu ir tobulinimui</li>
+                  <li>🎯 Darbinių procesų optimizavimu</li>
+                </ul>
+              </div>
+            </div>
+          </div>
           <div id="messages" class="messages"></div>
+        </div>
+
+        <div id="typing-indicator" class="typing-indicator hidden">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
         </div>
       </section>
 
@@ -35,14 +63,14 @@
           class="upload-input"
           type="file"
           multiple
-          accept=".pdf,.doc,.docx,.dwg,.dxf,.png,.jpg,.jpeg,.tif,.tiff,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg,image/tiff,image/tif"
+          accept=".pdf,.doc,.docx,.dwg,.dxf,.png,.jpg,.jpeg,.tif,.tiff,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg"
         />
 
         <div class="composer-content">
           <textarea
             id="composer-input"
             class="composer-input"
-            placeholder=""
+            placeholder="Parašykite savo klausimą ar žinutę..."
             aria-label="Zinutes tekstas"
             rows="1"
           ></textarea>
@@ -61,14 +89,28 @@
       const composerForm = document.querySelector(".composer");
       const composerInput = document.getElementById("composer-input");
       const messages = document.getElementById("messages");
+      const chatWelcome = document.getElementById("chat-welcome");
+      const typingIndicator = document.getElementById("typing-indicator");
       let attachedFiles = [];
+      let messageCount = 0;
 
       const renderSelectedFiles = () => {
         fileList.innerHTML = "";
         attachedFiles.forEach((file) => {
           const tag = document.createElement("span");
           tag.className = "file-tag";
-          tag.textContent = file.name;
+          tag.innerHTML = `
+            <span class="file-tag-name">${file.name}</span>
+            <button type="button" class="file-tag-remove" aria-label="Pašalinti ${file.name}">×</button>
+          `;
+          
+          tag.querySelector(".file-tag-remove").addEventListener("click", (e) => {
+            e.preventDefault();
+            attachedFiles = attachedFiles.filter(f => f.name !== file.name);
+            renderSelectedFiles();
+            uploadInput.value = "";
+          });
+          
           fileList.appendChild(tag);
         });
       };
@@ -110,8 +152,11 @@
           .map(
             (file) => `
               <span class="message-file">
-                <span class="message-file-name">${escapeHtml(file.name)}</span>
-                <span class="message-file-meta">${formatFileSize(file.size)}</span>
+                <span class="message-file-icon">📎</span>
+                <span class="message-file-info">
+                  <span class="message-file-name">${escapeHtml(file.name)}</span>
+                  <span class="message-file-meta">${formatFileSize(file.size)}</span>
+                </span>
               </span>
             `
           )
@@ -170,7 +215,7 @@
 
       const buildAiResponse = async (text, files) => {
         if (!files.length) {
-          return "Gavau tavo žinutę. Jei prisegsi failą, galėsiu parodyti jo santrauką šiame pokalbyje.";
+          return "Gavau tavo žinutę. Aš čia, kad padėčiau. Jei prisegsi failą, galėsiu parodyti jo santrauką šiame pokalbyje.";
         }
 
         const previews = await Promise.all(files.map(readFilePreview));
@@ -183,7 +228,16 @@
 
       const resizeComposer = () => {
         composerInput.style.height = "auto";
-        composerInput.style.height = `${composerInput.scrollHeight}px`;
+        composerInput.style.height = `${Math.min(composerInput.scrollHeight, 180)}px`;
+      };
+
+      const showTypingIndicator = () => {
+        typingIndicator.classList.remove("hidden");
+        messages.scrollTop = messages.scrollHeight;
+      };
+
+      const hideTypingIndicator = () => {
+        typingIndicator.classList.add("hidden");
       };
 
       composerInput.addEventListener("input", resizeComposer);
@@ -202,6 +256,13 @@
         if (!text && !attachedFiles.length) return;
         const filesForMessage = [...attachedFiles];
 
+        // Hide welcome message on first message
+        if (messageCount === 0 && chatWelcome) {
+          chatWelcome.style.display = "none";
+        }
+        messageCount++;
+
+        // Create question message
         const question = document.createElement("article");
         question.className = "message-row message-row-question";
         question.innerHTML = `
@@ -215,10 +276,6 @@
         }
         messages.appendChild(question);
 
-        const answer = document.createElement("article");
-        answer.className = "message-row message-row-answer";
-        messages.appendChild(answer);
-
         composerInput.value = "";
         attachedFiles = [];
         uploadInput.value = "";
@@ -226,7 +283,19 @@
         resizeComposer();
         messages.scrollTop = messages.scrollHeight;
 
-        buildAiResponse(text || "Prisegti failai", filesForMessage).then((responseText) => {
+        // Show typing indicator
+        showTypingIndicator();
+
+        // Simulate response delay
+        setTimeout(async () => {
+          hideTypingIndicator();
+          
+          const answer = document.createElement("article");
+          answer.className = "message-row message-row-answer";
+          messages.appendChild(answer);
+
+          const responseText = await buildAiResponse(text || "Prisegti failai", filesForMessage);
+          
           answer.innerHTML = `
             <div class="message-bubble message-bubble-answer">
               <p class="message-text"></p>
@@ -234,7 +303,7 @@
           `;
           answer.querySelector(".message-text").textContent = responseText;
           messages.scrollTop = messages.scrollHeight;
-        });
+        }, 1500);
       });
     </script>
   </body>
